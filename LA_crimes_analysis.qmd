@@ -1,0 +1,144 @@
+---
+title: "Comprehensive Analysis of Los Angeles Crime and Arrest Data 2020"
+author: "Dmytro Kolisnyk, write your name there...."
+institute: "Kyiv School of Economics"
+date: "12/03/2024"
+format: 
+  pdf:
+    documentclass: article
+    toc: true
+    toc-depth: 2
+    geometry: margin=1in
+---
+
+## Introduction
+
+The purpose of this analysis is to explore the crime and arrest data in Los Angeles in 2020. The analysis will focus on the types of crimes that were committed, the locations where these crimes were most prevalent, and the demographics of the individuals who were arrested. The analysis will also examine the relationship between crime rates and calls for service to the Los Angeles Police Department (LAPD).
+
+## Import Required Libraries
+
+```{r}
+# Loading the tidyverse library for data manipulation and visualization
+library(tidyverse)
+```
+
+## Load Datasets
+
+```{r}
+# Reading in the dataset containing arrest data from 2020 to 2024
+Arrest_Data_from_2020_to_2024 <- read_csv("./Arrest_Data_from_2020_to_2024.csv")
+
+# Reading in the dataset containing crime data from 2020 to 2024
+Crime_Data_from_2020_to_2024 <- read_csv("./Crime_Data_from_2020_to_2024.csv")
+
+# Reading in the dataset containing LAPD calls for service data for the year 2020
+LAPD_Calls_for_Service_2020 <- read_csv("./LAPD_Calls_for_Service_2020.csv")
+```
+
+## Dataset Fields Description
+
+There is a brief description of the relevant fields in each dataset:
+
+### Arrest Data
+The following fields from the arrest dataset are relevant for this analysis:
+
+- **Arrest Date**: The date the arrest occurred.
+
+- **Time**: The time the arrest was made.
+
+- **Area Name**: Name of the area where the arrest occurred.
+
+- **Age**: Age of the individual arrested.
+
+- **Sex Code**: Gender of the individual arrested.
+
+- **Descent Code**: Ethnicity or descent of the individual arrested.
+
+- **Charge Group Description**: A description of the category of the
+ charge.
+- **Charge Description**: Detailed description of the charge.
+
+- **LAT**: Latitude of the arrest location.
+
+- **LON**: Longitude of the arrest location.
+
+
+### Crime Data
+
+The following fields from the crime dataset are relevant for this analysis:
+
+- **DATE OCC**: Date the crime occurred.
+
+- **TIME OCC**: Time the crime occurred.
+
+- **AREA NAME**: Name of the area where the crime occurred.
+
+- **Crm Cd Desc**: Description of the crime (e.g., Robbery, Assault).
+
+- **Vict Age**: Age of the victim.
+
+- **Vict Sex**: Gender of the victim.
+
+- **Vict Descent**: Ethnicity or descent of the victim.
+
+- **Premis Desc**: Description of the premises where the crime occurred.
+
+- **LAT**: Latitude of the crime location.
+
+- **LON**: Longitude of the crime location.
+
+
+### LAPD Calls for Service Data
+The following fields from the calls-for-service dataset are relevant for this analysis:
+
+- **Dispatch_Date**: Date the call was dispatched.
+
+- **Dispatch_Time**: Time the call was dispatched.
+
+- **Area_Occ**: The area where the incident occurred.
+
+- **Call_Type_Text**: Description of the type of call (e.g., Disturbance,
+ Burglary).
+
+
+---
+
+## Research Questions and Hypotheses
+
+### Research Question 1 (Arrest Data)
+**Question:** How do the age, gender, and ethnicity of arrested individuals correlate with the types of charges filed in Los Angeles in 2020?
+
+- **Target Population:** Individuals arrested in Los Angeles in 2020.
+- **Importance:** Understanding demographic patterns in arrests can highlight potential disparities and inform policy decisions.
+- **Hypotheses:**
+  - Younger individuals are more likely to be arrested for misdemeanors.
+  - Certain charges (e.g., drug-related offenses) are disproportionately filed against specific ethnic groups.
+  - Gender distribution varies significantly across charge types.
+- **Variables:**
+  - **Categorical:** Gender (Sex Code), Ethnicity (Descent Code), Charge Group Description.
+  - **Quantitative:** Age.
+
+### Research Question 2 (Crime Data)
+**Question:** What are the most common types of crimes committed in different areas of Los Angeles, and how do these vary by time of day?
+
+- **Target Population:** Crimes reported in Los Angeles in 2020.
+- **Importance:** Identifying crime trends by area and time can help allocate law enforcement resources more effectively.
+- **Hypotheses:**
+  - Property crimes are more frequent in residential areas during the day.
+  - Violent crimes are more frequent in urban areas at night.
+- **Variables:**
+  - **Categorical:** Area Name, Crime Description (Crm Cd Desc).
+  - **Quantitative:** Time of Crime (TIME OCC).
+
+### Research Question 3 (LAPD Calls for Service Data)
+**Question:** Is there a correlation between the frequency of LAPD service calls and the crime rate in different areas of Los Angeles?
+
+- **Target Population:** Service calls and reported crimes in Los Angeles in 2020.
+- **Importance:** This analysis can help evaluate the effectiveness of LAPD's response to crime hot spots.
+- **Hypotheses:**
+  - Areas with higher crime rates also have higher call volumes.
+  - Certain call types (e.g., disturbances) are more prevalent in high-crime areas.
+- **Variables:**
+  - **Categorical:** Area Occurrence (Area_Occ), Call Type (Call_Type_Text).
+  - **Quantitative:** Frequency of Calls, Crime Rate.
+
