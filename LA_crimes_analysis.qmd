@@ -143,45 +143,63 @@ The following fields from the calls-for-service dataset are relevant for this an
 - **Variables:**
   - **Categorical:** Area Occurrence (Area_Occ), Call Type (Call_Type_Text).
   - **Quantitative:** Frequency of Calls, Crime Rate.
+
+## Data Cleaning
+
+The following steps were taken to clean the datasets and ensure the quality of the data:
+	-	**Removing Zeros:
+Rows where any value in the dataset is 0 were removed. Zeros often indicate placeholder values or missing data, which could distort the analysis.
+	-	**Removing Missing Values (NA):
+Rows containing missing values were excluded. These values represent data that was not recorded or unavailable.
+	-	**Filtering for 2020:
+Only records from the year 2020 were retained across all datasets. This ensures that the analysis is focused exclusively on the target period.
+	-	**Combining Datasets:
+The cleaned datasets were combined into a single dataset. An additional column, Source, was added to identify the origin of each record (Arrest, Crime, or Calls).
+
+The cleaning process ensures that only complete and valid data is included, improving the reliability of the analysis.
+
 ```{r}
-# Перегляд структури кожного датасету
+# View the structure of each dataset
 glimpse(arrest_data)
 glimpse(crime_data)
 glimpse(calls_data)
 
-# Перетворення дат і фільтрація записів за 2020 рік
+## Filtering records for 2020
 arrest_data <- arrest_data %>%
   mutate(Arrest.Date = mdy_hms(Arrest.Date)) %>%
-  filter(year(Arrest.Date) == 2020)
+  filter(year(Arrest.Date) == 2020) %>%
+  filter_all(any_vars(. != 0 & !is.na(.)))
 
 crime_data <- crime_data %>%
   mutate(DATE.OCC = mdy_hms(DATE.OCC)) %>%
-  filter(year(DATE.OCC) == 2020)
+  filter(year(DATE.OCC) == 2020) %>%
+  filter_all(any_vars(. != 0 & !is.na(.)))
 
 calls_data <- calls_data %>%
   mutate(Dispatch_Date = mdy_hms(Dispatch_Date)) %>%
-  filter(year(Dispatch_Date) == 2020)
+  filter(year(Dispatch_Date) == 2020) %>%
+  filter_all(any_vars(. != 0 & !is.na(.)))
 
-# Перегляд фільтрованих даних
+# View filtered data
 glimpse(arrest_data)
 glimpse(crime_data)
 glimpse(calls_data)
 
-# Додавання колонок для ідентифікації джерела даних
+# Adding columns to identify the data source
 arrest_data <- arrest_data %>% mutate(Source = "Arrest")
 crime_data <- crime_data %>% mutate(Source = "Crime")
 calls_data <- calls_data %>% mutate(Source = "Calls")
 
-# Об'єднання всіх датасетів
+# Merge all datasets
 combined_data <- bind_rows(arrest_data, crime_data, calls_data)
 
-# Виведення об'єднаних даних (лише перші 20 рядків)
+# Print the combined data (first 20 lines only)
 cat("Перші 20 записів об'єднаного датасету:\n")
 print(head(combined_data, 20))
 
-# Перегляд структури об'єднаних даних
+# View the structure of the merged data
 glimpse(combined_data)
 
-# Підсумкова статистика
+# Final statistics
 summary(combined_data)
 ```
