@@ -164,21 +164,27 @@ glimpse(arrest_data)
 glimpse(crime_data)
 glimpse(calls_data)
 
-## Filtering records for 2020
+# Завантаження пакету tidyr
+library(tidyr)
+
+# Фільтрація записів за 2020 рік і видалення нульових та NA значень
 arrest_data <- arrest_data %>%
   mutate(Arrest.Date = mdy_hms(Arrest.Date)) %>%
   filter(year(Arrest.Date) == 2020) %>%
-  filter_all(any_vars(. != 0 & !is.na(.)))
+  drop_na() %>%          # Видалення всіх рядків, які містять NA
+  filter_all(any_vars(. != 0))  # Видалення рядків із нулями
 
 crime_data <- crime_data %>%
   mutate(DATE.OCC = mdy_hms(DATE.OCC)) %>%
   filter(year(DATE.OCC) == 2020) %>%
-  filter_all(any_vars(. != 0 & !is.na(.)))
+  drop_na() %>%
+  filter_all(any_vars(. != 0))
 
 calls_data <- calls_data %>%
   mutate(Dispatch_Date = mdy_hms(Dispatch_Date)) %>%
   filter(year(Dispatch_Date) == 2020) %>%
-  filter_all(any_vars(. != 0 & !is.na(.)))
+  drop_na() %>%
+  filter_all(any_vars(. != 0))
 
 # View filtered data
 glimpse(arrest_data)
@@ -193,13 +199,7 @@ calls_data <- calls_data %>% mutate(Source = "Calls")
 # Merge all datasets
 combined_data <- bind_rows(arrest_data, crime_data, calls_data)
 
-# Print the combined data (first 20 lines only)
-cat("Перші 20 записів об'єднаного датасету:\n")
-print(head(combined_data, 20))
 
 # View the structure of the merged data
 glimpse(combined_data)
-
-# Final statistics
-summary(combined_data)
 ```
