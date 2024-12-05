@@ -1,6 +1,6 @@
 ---
 title: "Comprehensive Analysis of Los Angeles Crime and Arrest Data 2020"
-author: "Dmytro Kolisnyk, write your name there...."
+author: "Dmytro Kolisnyk, Mylhailo Tkachenko"
 institute: "Kyiv School of Economics"
 date: "12/03/2024"
 format: 
