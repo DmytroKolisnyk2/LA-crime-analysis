@@ -20,19 +20,21 @@ The purpose of this analysis is to explore the crime and arrest data in Los Ange
 ```{r}
 # Loading the tidyverse library for data manipulation and visualization
 library(tidyverse)
+library(dplyr)
+library(lubridate)
 ```
 
 ## Load Datasets
 
 ```{r}
 # Reading in the dataset containing arrest data from 2020 to 2024
-Arrest_Data_from_2020_to_2024 <- read_csv("./Arrest_Data_from_2020_to_2024.csv")
+arrest_data <- read.csv("./Arrest_Data_from_2020_to_2024.csv")
 
 # Reading in the dataset containing crime data from 2020 to 2024
-Crime_Data_from_2020_to_2024 <- read_csv("./Crime_Data_from_2020_to_2024.csv")
+crime_data <- read.csv("./Crime_Data_from_2020_to_2024.csv")
 
 # Reading in the dataset containing LAPD calls for service data for the year 2020
-LAPD_Calls_for_Service_2020 <- read_csv("./LAPD_Calls_for_Service_2020.csv")
+calls_data <- read.csv("./LAPD_Calls_for_Service_2020.csv")
 ```
 
 ## Dataset Fields Description
@@ -141,4 +143,45 @@ The following fields from the calls-for-service dataset are relevant for this an
 - **Variables:**
   - **Categorical:** Area Occurrence (Area_Occ), Call Type (Call_Type_Text).
   - **Quantitative:** Frequency of Calls, Crime Rate.
+```{r}
+# Перегляд структури кожного датасету
+glimpse(arrest_data)
+glimpse(crime_data)
+glimpse(calls_data)
 
+# Перетворення дат і фільтрація записів за 2020 рік
+arrest_data <- arrest_data %>%
+  mutate(Arrest.Date = mdy_hms(Arrest.Date)) %>%
+  filter(year(Arrest.Date) == 2020)
+
+crime_data <- crime_data %>%
+  mutate(DATE.OCC = mdy_hms(DATE.OCC)) %>%
+  filter(year(DATE.OCC) == 2020)
+
+calls_data <- calls_data %>%
+  mutate(Dispatch_Date = mdy_hms(Dispatch_Date)) %>%
+  filter(year(Dispatch_Date) == 2020)
+
+# Перегляд фільтрованих даних
+glimpse(arrest_data)
+glimpse(crime_data)
+glimpse(calls_data)
+
+# Додавання колонок для ідентифікації джерела даних
+arrest_data <- arrest_data %>% mutate(Source = "Arrest")
+crime_data <- crime_data %>% mutate(Source = "Crime")
+calls_data <- calls_data %>% mutate(Source = "Calls")
+
+# Об'єднання всіх датасетів
+combined_data <- bind_rows(arrest_data, crime_data, calls_data)
+
+# Виведення об'єднаних даних (лише перші 20 рядків)
+cat("Перші 20 записів об'єднаного датасету:\n")
+print(head(combined_data, 20))
+
+# Перегляд структури об'єднаних даних
+glimpse(combined_data)
+
+# Підсумкова статистика
+summary(combined_data)
+```
